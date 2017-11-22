@@ -16,18 +16,15 @@ try {
 			else
 				Common.sessionId = '';
 			
-			// if(window.location.href.indexOf('127.0.0.1') + window.location.href.indexOf('localhost') > -2) {
 			// 	Common._QD_ordersbyday_url = "http://localhost:8080/qd-dashboard/v2/api/chart/orders-by-day";
 			// 	Common._QD_gettoken_url = "http://localhost:8080/qd-dashboard/v2/api/get-token";
 			// 	Common._QD_validatetoken_url = "http://localhost:8080/qd-dashboard/v2/api/validate-token";
 			// 	Common._QD_selectstore_url = "http://localhost:8080/qd-dashboard/v2/api/select-store";
-			// }
-			// else {
+			
 				Common._QD_ordersbyday_url = "https://server.quatrodigital.com.br/qd-dashboard-api/chart/orders-by-day";
 				Common._QD_gettoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/get-token";
 				Common._QD_validatetoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/validate-token";
 				Common._QD_selectstore_url = "https://server.quatrodigital.com.br/qd-dashboard-api/select-store";
-			// }
 		},
 		init: function() {
 			Common.getToken();
