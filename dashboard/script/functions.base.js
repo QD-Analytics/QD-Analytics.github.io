@@ -204,6 +204,10 @@ try {
 						}
 					}
 				},
+				zoom: {
+					enabled: true,
+					rescale: true
+				}
 			});
 
 			var chart2 = c3.generate({
@@ -234,6 +238,7 @@ try {
 					}
 				}
 			});
+			$('#chart2').before("<h4 class='text-center'>Total</h4>");
 
 			// if(keys.length > 31)
 			// 	chart.zoom([keys[0].split('/').reverse().join('-'), keys[30].split('/').reverse().join('-')]);
