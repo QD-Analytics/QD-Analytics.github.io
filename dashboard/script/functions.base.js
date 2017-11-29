@@ -99,6 +99,7 @@ try {
 			var ordersMarketplace = ['ordersMarketplace'];
 			var ordersIncompletes = ['ordersIncompletes'];
 			var ga = ['ga'];
+			var totalOrders = totalOrdersIncompletes = totalOrdersMarketplace = 0;
 
 			keys = Object.keys(data);
 			for(var day in data) {
@@ -108,6 +109,10 @@ try {
 				ordersMarketplace.push(data[day].ordersMarketplace || null);
 				ordersIncompletes.push(data[day].ordersIncompletes || null);
 				ga.push(data[day].GA || null);
+
+				totalOrders += parseInt(data[day].orders) || 0;
+				totalOrdersIncompletes += parseInt(data[day].ordersMarketplace) || 0;
+				// totalOrdersMarketplace += data[day].ordersIncompletes || 0;
 			};
 
 			var chart = c3.generate({
@@ -154,9 +159,14 @@ try {
 					],
 					order: null
 				},
-				// subchart: {
-				// 	show: keys.length > 31,
-				// },
+				grid: {
+					x: {
+						show: true
+					},
+					y: {
+						show: true
+					}
+				},
 				legend: {
 					position: 'inset',
 					inset: {
@@ -195,6 +205,36 @@ try {
 					}
 				},
 			});
+
+			var chart2 = c3.generate({
+				bindto: '#chart2',
+				data: {
+					columns: [
+						orders,
+						ordersIncompletes,
+						ordersMarketplace
+					],
+					names : {
+						orders: 'Pedidos da Loja',
+						ordersIncompletes: 'Pedidos incompletos',
+						ordersMarketplace: 'Pedidos via Marketplace'
+					},
+					colors: {
+						ordersIncompletes : '#9E9E9E',
+						orders : '#81C784',
+						ordersMarketplace : '#42A5F5'
+					},
+					type : 'pie'
+				},
+				tooltip: {
+					format: {
+						value: function (value, ratio, id) {
+							return value;
+						}
+					}
+				}
+			});
+
 			// if(keys.length > 31)
 			// 	chart.zoom([keys[0].split('/').reverse().join('-'), keys[30].split('/').reverse().join('-')]);
 
