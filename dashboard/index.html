@@ -11,16 +11,17 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 	<link rel="stylesheet" href="//qd-cdn.github.io/_qd-tools-visual-identity/qd-bootstrap-common.css" />
-	<link rel="stylesheet" href="script/c3.min.css">
+	<link rel="stylesheet" href="dist/css/c3.min.css">
+	<link rel="stylesheet" href="dist/css/qd-dashboard.css">
 
 	<style>
 	</style>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js" charset="utf-8"></script>
-	<script src="script/d3.min.js" charset="utf-8"></script>
-	<script src="script/c3.min.js" charset="utf-8"></script>
-	<script src="script/functions.base.js" charset="utf-8"></script>
+	<script src="dist/js/d3.min.js" charset="utf-8"></script>
+	<script src="dist/js/c3.min.js" charset="utf-8"></script>
+	<script src="dist/js/functions.base.js" charset="utf-8"></script>
 
 	<script>
 		(function(i,s,o,g,r,a,m) {		
@@ -45,39 +46,199 @@ i['GoogleAnalyticsObject']=r; i[r]=i[r]||function() {
 			</div>
 		</div>
 	</header>
+	<div class="content-wrapper">
+		<nav id="sidebar" class="hidden-xs">
+			<div class="menu">
+				<ul class="list-unstyled">
+					<li class="active">
+						<a href="#">
+							<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+							Pedidos
+							<kbd>Bu</kbd>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+							Acessos
+							<kbd>Pr</kbd>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+							Meio de Pagamento
+							<kbd>Pr</kbd>
+						</a>
+					</li>
+				</ul>
 
-	<div class="site">
-		<div class="container-fluid">
-			<h2 class="text-center loja" style="text-transform: capitalize"></h2>
-			<div class="row" style="margin-bottom: 50px;">
-				<div class="col-xs-12">
-					<form class="form-inline dates" style="display: inline-block;">
-						<div class="form-group">
-							<label for="dataInicial" style="margin-right: 10px;">De:</label>
-							<input type="date" class="form-control" name="dataInicial" id="dataInicial" placeholder="Data inicial">
-						</div>
-						<div class="form-group">
-							<label for="dataFinal" style="margin: 0 10px;">até</label>
-							<input type="date" class="form-control" name="dataFinal" id="dataFinal"placeholder="Data final">
-						</div>
-						<button type="submit" class="btn btn-default">Buscar</button>
-					</form>
-				</div>
-			</div>	
-			
-			<div class="row">
-				<div class="col-xs-12 col-sm-10">
-					<div id="chart"></div>
-				</div>
-				<div class="col-xs-12 col-sm-2">
-					<div id="chart2"></div>
+				<ul class="list-unstyled">
+					<li>
+						<a href="#">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+							Ajuda
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+							Enviar sugestão
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="planos">
+				<div class="well">
+					<ul class="list-unstyled">
+						<li>
+							<a href="#">
+								<kbd>St</kbd>
+								Plano: Starter
+							</a>
+						</li>
+						<li class="active">
+							<a href="#">
+								<kbd>Bu</kbd>
+								Plano: Business
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<kbd>Pr</kbd>
+								Plano: Premium
+							</a>
+						</li>
+					</ul>
+					<a href="#" class="btn btn-primary show">Atualizar Plano</a>
 				</div>
 			</div>
+		</nav>
 
-			
+		<div class="site">
+			<div class="container-fluid">
+				<h2>Pedidos</h2>
+				<div class="row" style="margin-bottom: 50px;">
+					<div class="col-xs-12">
+						<form class="form-inline dates" style="display: inline-block;">
+							<div class="form-group">
+								<label for="dataInicial" style="margin-right: 10px;">De:</label>
+								<input type="date" class="form-control" name="dataInicial" id="dataInicial" placeholder="Data inicial">
+							</div>
+							<div class="form-group">
+								<label for="dataFinal" style="margin: 0 10px;">até</label>
+								<input type="date" class="form-control" name="dataFinal" id="dataFinal"placeholder="Data final">
+							</div>
+							<button type="submit" class="btn btn-default">Aplicar</button>
+						</form>
+						<div style="float: right;">
+							<div class="form-group">
+								<label for="accountsPage" style="margin-right: 10px; line-height: 35px;">Selecionar loja</label>
+								<select name="accountsPage" class="form-control accounts page" style="float:right; width:auto;"></select>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="row">
+					<div class="col-xs-12 col-sm-10">
+						<div class="panel panel-default">
+							<div class="panel-heading transparent" role="tab" id="headingThree">
+								<span class="panel-title">
+									Totals
+								</span>
+								<a class="pull-right" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+									<span class="caret"></span>
+								</a>
+							</div>
+							<div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+								<div class="panel-body">
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert dark-green">
+											Pedidos $
+											<strong id="totalPriceOrders" class="show">R$ </strong>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert dark-blue">
+											Pedidos incompletos $
+											<strong id="totalPriceOrdersIncompletes" class="show">R$ </strong>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert dark-gray">
+											Pedidos via Marketplace $
+											<strong id="totalPriceOrdersMarketplace" class="show">R$ </strong>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert gold">
+											Média Ranking VTEX
+											<strong id="rankAverage" class="show">0</strong>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert light-green">
+											Pedidos Qtde
+											<strong id="totalOrders" class="show">0</strong>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert light-blue">
+											Pedidos incompletos Qtde
+											<strong id="totalOrdersIncompletes" class="show">0</strong>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-3">
+										<div class="alert light-gray">
+											Pedidos via Marketplace Qtde
+											<strong id="totalOrdersMarketplace" class="show">0</strong>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading transparent" role="tab" id="headingOne">
+								<span class="panel-title">
+									Quantidade de Pedidos por dia 
+								</span>
+								<a class="pull-right" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+									<span class="caret"></span>
+								</a>
+							</div>
+							<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+								<div class="panel-body">
+									<div id="chart"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-12 col-sm-2">
+						<div class="panel panel-default">
+							<div class="panel-heading transparent" role="tab" id="headingTwo">
+								<span class="panel-title">
+									Gráfico Pizza
+								</span>
+								<a class="pull-right" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+									<span class="caret"></span>
+								</a>
+							</div>
+							<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+								<div class="panel-body">
+									<div id="chart2"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				
+			</div>
 		</div>
-	</div>
-	
+	</div>	
 	<footer class="qd-v1-footer">
 		<p class="text-center">
 			<script>
@@ -152,7 +313,7 @@ i['GoogleAnalyticsObject']=r; i[r]=i[r]||function() {
 	<!-- Aviso de loading -->
 	<div class="qd-loading" style="position: fixed; top: 0; background: black; opacity: 0.5; width: 100%; height: 100%; z-index: 500;">
 		<p style="margin: 25% auto; text-align: center; color: white;">
-			Carregando	<img src="img/ajax-loader2.gif" />
+			Carregando	<img src="dist/img/ajax-loader2.gif" />
 		</p>
 	</div>
 

@@ -7,6 +7,11 @@ Array.prototype.indexOf||(Array.prototype.indexOf=function(d,e){var a;if(null==t
 function qd_number_format(b,c,d,e){b=(b+"").replace(/[^0-9+\-Ee.]/g,"");b=isFinite(+b)?+b:0;c=isFinite(+c)?Math.abs(c):0;e="undefined"===typeof e?",":e;d="undefined"===typeof d?".":d;var a="",a=function(a,b){var c=Math.pow(10,b);return""+(Math.round(a*c)/c).toFixed(b)},a=(c?a(b,c):""+Math.round(b)).split(".");3<a[0].length&&(a[0]=a[0].replace(/\B(?=(?:\d{3})+(?!\d))/g,e));(a[1]||"").length<c&&(a[1]=a[1]||"",a[1]+=Array(c-a[1].length+1).join("0"));return a.join(d)};
 
 try {
+	var Util = {
+		intToReal: function(intNumber) {
+			return 'R$ ' + (intNumber / 100).toFixed(2).toString().replace('.',',').replace(/(\d{1,3})(\d{3}),/, "$1.$2,");
+		}
+	};
 	var Common = {
 		run: function() {
 			if(document.cookie.indexOf('x-qd-session-token') > -1)
@@ -16,15 +21,15 @@ try {
 			else
 				Common.sessionId = '';
 			
-			// 	Common._QD_ordersbyday_url = "http://localhost:8080/qd-dashboard/v2/api/chart/orders-by-day";
-			// 	Common._QD_gettoken_url = "http://localhost:8080/qd-dashboard/v2/api/get-token";
-			// 	Common._QD_validatetoken_url = "http://localhost:8080/qd-dashboard/v2/api/validate-token";
-			// 	Common._QD_selectstore_url = "http://localhost:8080/qd-dashboard/v2/api/select-store";
+				Common._QD_ordersbyday_url = "http://localhost:8080/qd-dashboard/v2/api/chart/orders-by-day";
+				Common._QD_gettoken_url = "http://localhost:8080/qd-dashboard/v2/api/get-token";
+				Common._QD_validatetoken_url = "http://localhost:8080/qd-dashboard/v2/api/validate-token";
+				Common._QD_selectstore_url = "http://localhost:8080/qd-dashboard/v2/api/select-store";
 			
-				Common._QD_ordersbyday_url = "https://server.quatrodigital.com.br/qd-dashboard-api/chart/orders-by-day";
-				Common._QD_gettoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/get-token";
-				Common._QD_validatetoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/validate-token";
-				Common._QD_selectstore_url = "https://server.quatrodigital.com.br/qd-dashboard-api/select-store";
+				// Common._QD_ordersbyday_url = "https://server.quatrodigital.com.br/qd-dashboard-api/chart/orders-by-day";
+				// Common._QD_gettoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/get-token";
+				// Common._QD_validatetoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/validate-token";
+				// Common._QD_selectstore_url = "https://server.quatrodigital.com.br/qd-dashboard-api/select-store";
 		},
 		init: function() {
 			Common.getToken();
@@ -68,27 +73,21 @@ try {
 					return;
 				}
 
-				$('h2.loja').text(data.account);
-				if(data.accounts.length > 1 && !$('select.page.accounts').length){
-					select = $('<select>').addClass('form-control accounts page');
-					for(i = 0; i < data.accounts.length; i++)
-						select.append($('<option>').val(data.accounts[i]).text(data.accounts[i]));
+				$('select.page.accounts').empty();
+				for(i = 0; i < data.accounts.length; i++)
+					$('select.page.accounts').append($('<option>').val(data.accounts[i]).text(data.accounts[i]));
 
-					$('form.dates').parent().append(select.css({
-						display: 'inline-block',
-						width: 'auto',
-						float: 'right'
-					}).val(data.account));
+				select = $('select.page.accounts').val(data.account);
+				if(data.accounts.length == 1)
+					select = $('select.page.accounts').attr('disabled', true);
 
-					Common.changeStore();
-				}
+				Common.changeStore();
 
 				if(data.data.length < 1) {
 					$('.qd-loading').hide();
 					alert('O período informado não retornou valores.');
 					return;
 				}
-				
 				Common.generateChart(data.data)
 			});
 		},
@@ -99,12 +98,15 @@ try {
 			var ordersMarketplace = ['ordersMarketplace'];
 			var ordersIncompletes = ['ordersIncompletes'];
 			var ga = ['ga'];
-			var totalOrders = totalOrdersIncompletes = totalOrdersMarketplace = 0;
+			var totalOrders = totalOrdersIncompletes = totalOrdersMarketplace = rankAverage = rankCounter = 0;
+			var totalPriceOrders = totalPriceOrdersIncompletes = totalPriceOrdersMarketplace = 0;
 
 			keys = Object.keys(data);
 			for(var day in data) {
 				dates.push(day.split('/').reverse().join('-'));
-				ranks.push(data[day].rank || null);
+				
+				let rankVal = data[day].rank == -1 ? null : data[day].rank;
+				ranks.push(rankVal);
 				orders.push(data[day].orders || null);
 				ordersMarketplace.push(data[day].ordersMarketplace || null);
 				ordersIncompletes.push(data[day].ordersIncompletes || null);
@@ -112,8 +114,19 @@ try {
 
 				totalOrders += parseInt(data[day].orders) || 0;
 				totalOrdersIncompletes += parseInt(data[day].ordersMarketplace) || 0;
-				// totalOrdersMarketplace += data[day].ordersIncompletes || 0;
+				totalOrdersMarketplace += parseInt(data[day].ordersIncompletes) || 0;
+				totalPriceOrders += parseInt(data[day].ordersTotal) || 0;
+				totalPriceOrdersIncompletes += parseInt(data[day].ordersMarketplaceTotal) || 0;
+				totalPriceOrdersMarketplace += parseInt(data[day].ordersIncompletesTotal) || 0;
+				if(data[day].rank >= 1) {
+					rankCounter++;
+					rankAverage += parseInt(data[day].rank); 
+				}
 			};
+			rankAverage = rankAverage / rankCounter;
+
+			Common.populateCards(totalOrders, totalOrdersIncompletes, totalOrdersMarketplace, 
+				totalPriceOrders, totalPriceOrdersIncompletes, totalPriceOrdersMarketplace, rankAverage);
 
 			var chart = c3.generate({
 				bindto: '#chart',
@@ -238,12 +251,19 @@ try {
 					}
 				}
 			});
-			$('#chart2').before("<h4 class='text-center'>Total</h4>");
-
-			// if(keys.length > 31)
-			// 	chart.zoom([keys[0].split('/').reverse().join('-'), keys[30].split('/').reverse().join('-')]);
 
 			$('.qd-loading').hide();
+		},
+		populateCards: function(totalOrders, totalOrdersIncompletes, totalOrdersMarketplace, 
+				totalPriceOrders, totalPriceOrdersIncompletes, totalPriceOrdersMarketplace, rankAverage){
+			
+			$('#totalPriceOrders').text(Util.intToReal(totalPriceOrders));
+			$('#totalPriceOrdersIncompletes').text(Util.intToReal(totalPriceOrdersIncompletes));
+			$('#totalPriceOrdersMarketplace').text(Util.intToReal(totalPriceOrdersMarketplace));
+			$('#rankAverage').text(rankAverage.toFixed(0));
+			$('#totalOrders').text(totalOrders);
+			$('#totalOrdersIncompletes').text(totalOrdersIncompletes);
+			$('#totalOrdersMarketplace').text(totalOrdersMarketplace);
 		},
 		searchDates: function() {
 			$('form.dates').on("submit", function(e) {
