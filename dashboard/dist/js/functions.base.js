@@ -21,15 +21,15 @@ try {
 			else
 				Common.sessionId = '';
 			
-				Common._QD_ordersbyday_url = "http://localhost:8080/qd-dashboard/v2/api/chart/orders-by-day";
-				Common._QD_gettoken_url = "http://localhost:8080/qd-dashboard/v2/api/get-token";
-				Common._QD_validatetoken_url = "http://localhost:8080/qd-dashboard/v2/api/validate-token";
-				Common._QD_selectstore_url = "http://localhost:8080/qd-dashboard/v2/api/select-store";
+				// Common._QD_ordersbyday_url = "http://localhost:8080/qd-dashboard/v2/api/chart/orders-by-day";
+				// Common._QD_gettoken_url = "http://localhost:8080/qd-dashboard/v2/api/get-token";
+				// Common._QD_validatetoken_url = "http://localhost:8080/qd-dashboard/v2/api/validate-token";
+				// Common._QD_selectstore_url = "http://localhost:8080/qd-dashboard/v2/api/select-store";
 			
-				// Common._QD_ordersbyday_url = "https://server.quatrodigital.com.br/qd-dashboard-api/chart/orders-by-day";
-				// Common._QD_gettoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/get-token";
-				// Common._QD_validatetoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/validate-token";
-				// Common._QD_selectstore_url = "https://server.quatrodigital.com.br/qd-dashboard-api/select-store";
+				Common._QD_ordersbyday_url = "https://server.quatrodigital.com.br/qd-dashboard-api/chart/orders-by-day";
+				Common._QD_gettoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/get-token";
+				Common._QD_validatetoken_url = "https://server.quatrodigital.com.br/qd-dashboard-api/validate-token";
+				Common._QD_selectstore_url = "https://server.quatrodigital.com.br/qd-dashboard-api/select-store";
 		},
 		init: function() {
 			Common.getToken();
