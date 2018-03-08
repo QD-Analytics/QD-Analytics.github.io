@@ -106,7 +106,7 @@ try {
 				dates.push(day.split('/').reverse().join('-'));
 				
 				let rankVal = data[day].rank == -1 ? null : data[day].rank;
-				ranks.push(rankVal);
+				ranks.push(rankVal || null);
 				orders.push(data[day].orders || null);
 				ordersMarketplace.push(data[day].ordersMarketplace || null);
 				ordersIncompletes.push(data[day].ordersIncompletes || null);
@@ -123,8 +123,17 @@ try {
 					rankAverage += parseInt(data[day].rank); 
 				}
 			};
-			rankAverage = rankAverage / rankCounter;
 
+			rankAverage = rankCounter > 0 ? rankAverage / rankCounter :0;
+
+			console.log([
+				orders,
+				ordersIncompletes,
+				ordersMarketplace,
+				ga,
+				ranks,
+				dates
+			]);
 			Common.populateCards(totalOrders, totalOrdersIncompletes, totalOrdersMarketplace, 
 				totalPriceOrders, totalPriceOrdersIncompletes, totalPriceOrdersMarketplace, rankAverage);
 
